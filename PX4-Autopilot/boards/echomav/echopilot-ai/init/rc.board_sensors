@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# EchoMAV EchoPilot AI specific board sensors init
+#------------------------------------------------------------------------------
+board_adc start
+
+# Internal SPI bus ICM-42688P, Yaw 180
+icm42688p -R 4 -s start
+
+# internal RM3100 compass on I2C
+rm3100 -I -R 0 start
+
+# Baro on internal SPI
+ms5611 -s start
+
+# External compass on GPS1/I2C1: standard GPS/compass puck (with lights, safety button, and buzzer)
+ist8310 -X -b 1 -R 10 start
