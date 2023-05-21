@@ -5,6 +5,7 @@ This repo provides the board support files for the EchoPilot AI hardware.
 Clone this repo:  
 ```
 git clone https://github.com/EchoMAV/echopilot_ai_bsp
+cd echopilot_ai_bsp
 ```
 Checkout the appropriate branch for your EchoPilot AI board revision (Revision is noted near the FAN connector). E.g., for revision 0:  
 ```
@@ -12,11 +13,11 @@ git checkout board_revision_0
 ```
 Now proceed using the install scripts below based on what firmware you are building.
 
-## Ardupilot
+## ArduPilot
 
-Assuming that ardupilot is installed at `~/ardupilot`.    
+Assuming that ArduPilot is installed at `~/ardupilot`.    
 
-To install the hwdef files for Ardupilot (assuming Ardupilot code base is already set up and you can succesfully compile), then:
+To install the hwdef files for ArduPilot (assuming ArduPolot code base is already set up and you can succesfully compile), then:
 ```
 ./install_ardupilot.sh ~/ardupilot
 ```
@@ -25,7 +26,7 @@ To install the hwdef files for Ardupilot (assuming Ardupilot code base is alread
 
 Assuming that PX4 is installed at `~/PX4-Autopilot`. If not, please adjust the path argument to the script below.  
 
-To install the board files for PX$ (assuming PX4 code base is already set up and you can succesfully build PX4):
+To install the board files for PX4 (assuming PX4 code base is already set up and you can succesfully build PX4):
 ```
 ./install_px4.sh ~/PX4-Autopilot
 ```
