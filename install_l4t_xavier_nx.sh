@@ -23,7 +23,7 @@ mkdir -p $INSTALL_PATH/kernel/dtb
 
 echo "Copying files..."
 # copy files
-cp Linux_for_Tegra/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
+cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
 cp Linux_for_Tegra/bootloader/t186ref/BCT/* $INSTALL_PATH/bootloader/t186ref/BCT/.
 cp Linux_for_Tegra/kernel/dtb/tegra194-p3668-0001-p3509-0000.dtb $INSTALL_PATH/kernel/dtb/.
 
