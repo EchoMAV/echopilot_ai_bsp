@@ -31,7 +31,7 @@ To install the board files for PX4 (assuming PX4 code base is already set up and
 ./install_px4.sh ~/PX4-Autopilot
 ```
 
-## Linux for Tegra
+## Linux for Tegra Xavier NX
 
 Assuming that L4T (Linux_for_Tegra) folder is installed at `~/XavierNX/Linux_for_Tegra`. If not, please adjust the path argument for the script below.  
 
@@ -40,4 +40,15 @@ Select the appropriate install script for the Jetson hardware used. e.g. XavierN
 To install the BSP files to build L4T:
 ```
 ./install_l4t_xavier_nx.sh ~/XavierNX/Linux_for_Tegra
+```
+
+## Linux for Tegra Nano
+
+Assuming that L4T (Linux_for_Tegra) folder is installed at `~/Nano/Linux_for_Tegra`. If not, please adjust the path argument for the script below.  
+
+Select the appropriate install script for the Jetson hardware used. e.g. Nano = `install_l4t_nano.sh`.  
+
+To install the BSP files to build L4T:
+```
+./install_l4t_nano.sh ~/Nano/Linux_for_Tegra
 ```
