@@ -14,6 +14,13 @@ then
 fi
 
 INSTALL_PATH=$(realpath -s $1)
+
+# verify that the path contains "Linux_for_Tegra"
+if [[ "$INSTALL_PATH" != *"Linux_for_Tegra"* ]]; then
+  echo "Error: the directory Linux_for_Tegra is not found in the path specified."
+  exit 0
+fi
+
 echo "Using Install Path: " $INSTALL_PATH
 # make folders if they don't exist
 echo "Making directories..."

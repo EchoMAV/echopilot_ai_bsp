@@ -5,7 +5,7 @@
 # remove trailing slash if present
 
 if [[ $# != 1 ]] ; then
-  echo 'USAGE: ./install_ardupilot.sh <Path to Linux_for_Tegra>'
+  echo 'USAGE: ./install_ardupilot.sh <Path to ardupilot e.g. ~/ardupilot>'
   exit 0
 fi
 
