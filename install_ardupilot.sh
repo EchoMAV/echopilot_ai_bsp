@@ -20,6 +20,8 @@ echo "Using Install Path: " $INSTALL_PATH
 # make folders if they don't exist
 
 echo "Copying hwdef files..."
+
+mkdir -p $INSTALL_PATH/libraries/AP_HAL_ChibiOS/hwdef/EchoPilotAI
 # copy files
 cp ardupilot/libraries/AP_HAL_ChibiOS/hwdef/EchoPilotAI -r $INSTALL_PATH/libraries/AP_HAL_ChibiOS/hwdef/.
 
