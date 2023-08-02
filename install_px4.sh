@@ -19,8 +19,6 @@ INSTALL_PATH=$(realpath -s $1)
 echo "Using Install Path: " $INSTALL_PATH
 
 echo "Copying files..."
-# copy files
-cp Linux_for_Tegra/boot/extlinux/extlinux.conf $INSTALL_PATH/Linux_for_Tegra/boot/extlinux/.
 
 # copy files
 cp PX4-Autopilot/boards/echomav -r $INSTALL_PATH/boards/.

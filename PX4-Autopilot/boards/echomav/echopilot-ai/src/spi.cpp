@@ -35,29 +35,30 @@
 #include <drivers/drv_sensor.h>
 #include <nuttx/spi/spi.h>
 
+//PF5 was not connected on R1 boards, fix is to use PC3 for the SPI_DEV flash device
+//Change back to PF5 on R1a and future
 
 constexpr px4_spi_bus_t px4_spi_buses[SPI_BUS_MAX_BUS_ITEMS] = {
 	initSPIBus(SPI::Bus::SPI1, {
-			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortF, GPIO::Pin2}, SPI::DRDY{GPIO::PortB, GPIO::Pin4}),
-			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortF, GPIO::Pin3}, SPI::DRDY{GPIO::PortC, GPIO::Pin5}),
-			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortG, GPIO::Pin10}, SPI::DRDY{GPIO::PortB, GPIO::Pin15}),
+			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortF, GPIO::Pin2}, SPI::DRDY{GPIO::PortB, GPIO::Pin4}),  
+			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortF, GPIO::Pin3}, SPI::DRDY{GPIO::PortC, GPIO::Pin5}),  			
 			initSPIDevice(DRV_DEVTYPE_UNUSED, SPI::CS{GPIO::PortH, GPIO::Pin5}),
 		}, {GPIO::PortE, GPIO::Pin3}),
 		initSPIBus(SPI::Bus::SPI2, {
-			initSPIDevice(SPIDEV_FLASH(0), SPI::CS{GPIO::PortF, GPIO::Pin5})
+			initSPIDevice(SPIDEV_FLASH(0), SPI::CS{GPIO::PortC, GPIO::Pin3}),
+			initSPIDevice(DRV_MAG_DEVTYPE_RM3100, SPI::CS{GPIO::PortF, GPIO::Pin4}),
 		}),
 		initSPIBus(SPI::Bus::SPI4, {
+			initSPIDevice(DRV_IMU_DEVTYPE_ICM42688P, SPI::CS{GPIO::PortG, GPIO::Pin10}, SPI::DRDY{GPIO::PortB, GPIO::Pin15}),
 			initSPIDevice(DRV_BARO_DEVTYPE_MS5611, SPI::CS{GPIO::PortF, GPIO::Pin10}),
+		}),
+		initSPIBus(SPI::Bus::SPI6, {
+			initSPIDevice(DRV_BARO_DEVTYPE_MS5611, SPI::CS{GPIO::PortF, GPIO::Pin11}),
 		}),
 		initSPIBusExternal(SPI::Bus::SPI5, {
 			initSPIConfigExternal(SPI::CS{GPIO::PortI, GPIO::Pin4}),
 			initSPIConfigExternal(SPI::CS{GPIO::PortI, GPIO::Pin10}),
-		}),
-		initSPIBusExternal(SPI::Bus::SPI6, {
-			initSPIConfigExternal(SPI::CS{GPIO::PortI, GPIO::Pin6}),
-			initSPIConfigExternal(SPI::CS{GPIO::PortI, GPIO::Pin7}),
-			initSPIConfigExternal(SPI::CS{GPIO::PortI, GPIO::Pin8})
-		}),
+		}),	
 };
 
 static constexpr bool unused = validateSPIConfig(px4_spi_buses);

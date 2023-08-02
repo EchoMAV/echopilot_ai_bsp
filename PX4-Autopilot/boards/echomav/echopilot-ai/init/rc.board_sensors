@@ -4,13 +4,13 @@
 #------------------------------------------------------------------------------
 board_adc start
 
-# Internal SPI bus ICM-42688P, Yaw 180
+# 3x ICM-42688P on internal SPI 1 and 4, Yaw 180
 icm42688p -R 4 -s start
 
-# internal RM3100 compass on I2C
-rm3100 -I -R 0 start
+# internal RM3100 compass on internal SPI
+rm3100 -s -R 0 start
 
-# Baro on internal SPI
+# Baro 1 and 2 on internal SPI 4 and 6
 ms5611 -s start
 
 # External compass on GPS1/I2C1: standard GPS/compass puck (with lights, safety button, and buzzer)
