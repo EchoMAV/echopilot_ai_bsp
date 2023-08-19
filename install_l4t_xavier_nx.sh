@@ -27,11 +27,14 @@ echo "Making directories..."
 mkdir -p $INSTALL_PATH/rootfs/boot/extlinux
 mkdir -p $INSTALL_PATH/bootloader/t186ref/BCT
 mkdir -p $INSTALL_PATH/kernel/dtb
-
+echo ""
 echo "Copying files..."
+echo ""
 # copy files
 cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
 cp Linux_for_Tegra/bootloader/t186ref/BCT/* $INSTALL_PATH/bootloader/t186ref/BCT/.
 cp Linux_for_Tegra/kernel/dtb/tegra194-p3668-0001-p3509-0000.dtb $INSTALL_PATH/kernel/dtb/.
-
-echo "Complete."
+echo ""
+echo "Success!!"
+echo ""
+echo "flash the Xavier NX from the Linux_for_Tegra directory using: sudo ./flash.sh jetson-xavier-nx-devkit-emmc mmcblk0p1"
