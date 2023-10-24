@@ -23,6 +23,7 @@ echo "Copying hwdef files..."
 
 # copy files
 cp ardupilot/libraries/AP_HAL_ChibiOS/hwdef/EchoPilotAI -r $INSTALL_PATH/libraries/AP_HAL_ChibiOS/hwdef/.
+cp ardupilot/Tools/bootloaders/EchoPilotAI_bl.bin $INSTALL_PATH/Tools/bootloaders/.
 
 echo "Complete."
 echo "You may now build ardupilot (e.g. copter) using:"
