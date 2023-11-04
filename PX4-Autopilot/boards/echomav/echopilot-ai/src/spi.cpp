@@ -45,7 +45,7 @@ constexpr px4_spi_bus_t px4_spi_buses[SPI_BUS_MAX_BUS_ITEMS] = {
 			initSPIDevice(DRV_DEVTYPE_UNUSED, SPI::CS{GPIO::PortH, GPIO::Pin5}),
 		}, {GPIO::PortE, GPIO::Pin3}),
 		initSPIBus(SPI::Bus::SPI2, {
-			initSPIDevice(SPIDEV_FLASH(0), SPI::CS{GPIO::PortF, GPIO::Pin5}),
+			initSPIDevice(SPIDEV_FLASH(0), SPI::CS{GPIO::PortC, GPIO::Pin3}),
 			initSPIDevice(DRV_MAG_DEVTYPE_RM3100, SPI::CS{GPIO::PortF, GPIO::Pin4}),
 		}),
 		initSPIBus(SPI::Bus::SPI4, {
