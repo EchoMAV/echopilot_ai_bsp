@@ -25,7 +25,8 @@ echo "Using Install Path: " $INSTALL_PATH
 
 echo "Copying files..."
 # copy files
-cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.
+cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.                                          
+cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.
 cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-0000-p3509-a02.dtb $INSTALL_PATH/kernel/dtb/.
 
 
