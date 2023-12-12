@@ -34,6 +34,8 @@ echo ""
 cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
 cp Linux_for_Tegra/bootloader/t186ref/BCT/* $INSTALL_PATH/bootloader/t186ref/BCT/.
 cp Linux_for_Tegra/kernel/dtb/tegra194-p3668-0001-p3509-0000.dtb $INSTALL_PATH/kernel/dtb/.
+# File below is needed for Xavier to boot when telemetry is streaming to the UART (Iridium connector), otherwise data on the port interrupts UEFI boot (testkey)
+cp Linux_for_Tegra/kernel/dtb/L4TConfiguration.dtbo $INSTALL_PATH/kernel/dtb/.
 echo ""
 echo "Success!!"
 echo ""
