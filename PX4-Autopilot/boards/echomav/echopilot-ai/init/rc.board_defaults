@@ -15,3 +15,5 @@ param set-default BAT1_V_CHANNEL 16
 param set-default BAT1_I_CHANNEL 17
 param set-default BAT2_V_CHANNEL 14
 param set-default BAT2_I_CHANNEL 15
+
+param set-default SYS_USE_IO 1
