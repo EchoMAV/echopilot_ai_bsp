@@ -24,18 +24,21 @@ fi
 echo "Using Install Path: " $INSTALL_PATH
 # make folders if they don't exist
 echo "Making directories..."
-mkdir -p $INSTALL_PATH/rootfs/boot/extlinux
+# mkdir -p $INSTALL_PATH/rootfs/boot/extlinux
 mkdir -p $INSTALL_PATH/bootloader/t186ref/BCT
 mkdir -p $INSTALL_PATH/kernel/dtb
 echo ""
 echo "Copying files..."
 echo ""
 # copy files
-cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
-cp Linux_for_Tegra/bootloader/t186ref/BCT/* $INSTALL_PATH/bootloader/t186ref/BCT/.
+# no longer need to do this for L4T 35.5
+# cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
+# The dtb below only change from the stock P3509 carrier board dtb is disable of hdmi
+# This change is in /Linux_for_Tegra/source/hardware/nvidia/platform/t19x/jakku/kernel-dts/common/tegra194-p3509-disp.dtsi
 cp Linux_for_Tegra/kernel/dtb/tegra194-p3668-0001-p3509-0000.dtb $INSTALL_PATH/kernel/dtb/.
 # File below is needed for Xavier to boot when telemetry is streaming to the UART (Iridium connector), otherwise data on the port interrupts UEFI boot (testkey)
 cp Linux_for_Tegra/kernel/dtb/L4TConfiguration.dtbo $INSTALL_PATH/kernel/dtb/.
+$SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3668.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/.
 echo ""
 echo "Success!!"
 echo ""
