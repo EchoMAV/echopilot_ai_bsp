@@ -46,7 +46,24 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
     cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts $INSTALL_PATH/bootloader/generic/BCT/.
     cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts $INSTALL_PATH/bootloader/generic/BCT/.
     cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-0000-p3509-a02.dtb $INSTALL_PATH/kernel/dtb/.
-    $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/.    
+    $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
+
+
+    # Copy custom dtbo file to root filesystem
+    echo "Installing custom DTBO file..."
+	$SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
+
+    #create a backup of original if not already created
+	if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
+		echo "Creating a backup of extlinux.conf..."
+		$SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
+	else
+		echo "Backup already exists, skipping backup creation."
+	fi
+
+	# Replace the config file with ours with the OVERLAY set for custom imx477
+	$SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
+
     echo "Success!!!"
     echo ""
     echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"    
@@ -59,6 +76,21 @@ elif [ "$BSP_BRANCH" -eq 35 ]; then
     cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.
     cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-0000-p3509-a02.dtb $INSTALL_PATH/kernel/dtb/.
     $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/.    
+	
+    # Copy custom dtbo file to root filesystem
+    echo "Installing custom DTBO file..."
+	$SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
+
+    #create a backup of original if not already created
+	if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
+		echo "Creating a backup of extlinux.conf..."
+		$SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
+	else
+		echo "Backup already exists, skipping backup creation."
+	fi
+
+	# Replace the config file with ours with the OVERLAY set for custom imx477
+	$SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
     echo "Success!!!"
     echo ""
     echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"
@@ -67,8 +99,3 @@ elif [ "$BSP_BRANCH" -eq 35 ]; then
 else
     echo "Version ${BSP_BRANCH} of L4T detected is not supported. Please use L4T 35.x or 36.x"
 fi
-
-
-
-
-
