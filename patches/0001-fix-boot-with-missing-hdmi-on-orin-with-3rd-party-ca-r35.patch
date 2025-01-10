@@ -1,0 +1,29 @@
+From 0adfaa00421d8779700c4062b5c9320d512a21d6 Mon Sep 17 00:00:00 2001
+From: Garrett Mesmer <190508517+gmesm@users.noreply.github.com>
+Date: Wed, 8 Jan 2025 11:31:53 -0500
+Subject: [PATCH] fix boot with missing hdmi on orin with 3rd party carrier
+
+---
+ .../t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts         | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts b/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts
+index 921b09e..0ffd98b 100644
+--- a/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts
++++ b/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts
+@@ -5,6 +5,12 @@
+ 
+ / {
+     tfc {
++        
++        reg@322 { /* GPIO_M_SCR_00_0 */
++            exclusion-info = <2>;
++            value = <0x38009696>;
++        };
++
+         reg@5138 { /* CBB_CENTRAL_CBB_FIREWALL_QSPI0_BLF, READ_CTL */
+             exclusion-info = <2>;
+             value = <0x00100009>;
+-- 
+2.34.1
+

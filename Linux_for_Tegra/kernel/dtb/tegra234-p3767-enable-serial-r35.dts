@@ -1,0 +1,14 @@
+/dts-v1/;
+/plugin/;
+
+/ {
+    overlay-name = "Enable Serial ttyTHS1 Custom Echopilot Overlay";
+    compatible = "nvidia,p3509-0000+p3767-0000";
+
+    fragment@1 {
+        target-path = "/serial@3110000";
+        __overlay__ {
+            status = "okay";
+        };
+    };
+};

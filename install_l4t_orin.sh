@@ -2,7 +2,19 @@
 # Installation of dtb, cfg and extlinux.conf file for building L4T for Orin NX on the EchoPilot AI
 # Usage: ./install_l4t_orin.sh [path to Linux_for_Tegra]
 
+SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 SUDO=$(test ${EUID} -ne 0 && which sudo)
+
+apply_patch() {
+  # try reverting patch incase it is already installed
+  git -C "$1" apply --reverse --check "$2" &>/dev/null
+  if [ $? == 0 ]; then
+    git -C "$1" apply --reverse "$2" &>/dev/null
+  fi
+  # apply patch
+  git -C "$1" apply --verbose "$2" &>/dev/null
+}
+
 
 if [[ $# != 1 ]] ; then
   echo 'USAGE: ./install_l4t_orin.sh <Path to Linux_for_Tegra, e.g. ~/Orin/Linux_for_Tegra/>'
@@ -37,65 +49,76 @@ if [ ! -f "$BSP_PATH" ]; then
   echo "Warning, L4T Version not found, defaulting to Vesion:" $BSP_BRANCH
 else
   BSP_BRANCH=$(grep "^BSP_BRANCH=" "$BSP_PATH" | awk -F= '{print $2}')
-  echo "Found L4T Version:" $BSP_BRANCH
+  BSP_MAJOR=$(grep "^BSP_MAJOR=" "$BSP_PATH" | awk -F= '{print $2}')
+  echo "Found L4T Version: $BSP_BRANCH.$BSP_MAJOR"
 fi
 
-if [ "$BSP_BRANCH" -eq 36 ]; then    
-    echo "Copying files for L4T 36..."
-    # copy files
-    cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts $INSTALL_PATH/bootloader/generic/BCT/.
-    cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts $INSTALL_PATH/bootloader/generic/BCT/.
-    cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-0000-p3509-a02.dtb $INSTALL_PATH/kernel/dtb/.
-    $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
+if [ "$BSP_BRANCH" -eq 36 ]; then
+  echo "Copying files for L4T $BSP_BRANCH.$BSP_MAJOR..."
+  echo "Applying BSP patches..."
+  # disable board eeprom requirement
+  apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-disable-board-eeprom-requirement.patch
+  if [ "$BSP_MAJOR" -lt 4 ]; then
+    # add fix for disabled hdmi (corrected in 36.4+)
+    apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-fix-boot-with-missing-hdmi-on-orin-with-3rd-party-ca.patch
+  fi
 
+  # add fancontrol config
+  $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
 
-    # Copy custom dtbo file to root filesystem
-    echo "Installing custom DTBO file..."
-	$SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
+  # Copy custom device tree overlay files to the BSP
+  echo "Installing custom DTBO files..."
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-echopilot-branding.dtbo $INSTALL_PATH/kernel/dtb/.
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-disable-display.dtbo $INSTALL_PATH/kernel/dtb/.
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-enable-serial.dtbo $INSTALL_PATH/kernel/dtb/.
 
-    #create a backup of original if not already created
-	if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
-		echo "Creating a backup of extlinux.conf..."
-		$SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
-	else
-		echo "Backup already exists, skipping backup creation."
-	fi
+  # Copy custom conf to the BSP
+  $SUDO cp Linux_for_Tegra/echopilot-ai.conf $INSTALL_PATH/.
 
-	# Replace the config file with ours with the OVERLAY set for custom imx477
-	$SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
+  # Disable force installation of custom IMX477 DTBO for now
+  # echo "Installing custom DTBO file..."
+  # $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
 
-    echo "Success!!!"
-    echo ""
-    echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"    
-    echo 'sudo ./tools/kernel_flash/l4t_initrd_flash.sh -c ./tools/kernel_flash/flash_l4t_external.xml --external-device nvme0n1p1 -p "-c bootloader/generic/cfg/flash_t234_qspi.xml" p3509-a02-p3767-0000 internal'
-    echo ""
+  # #create a backup of original if not already created
+  # if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
+  #   echo "Creating a backup of extlinux.conf..."
+  #   $SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
+  # else
+  #   echo "Backup already exists, skipping backup creation."
+  # fi
+
+  # # Replace the config file with ours with the OVERLAY set for custom imx477
+  # $SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
+
+  echo "Success!!!"
+  echo ""
+  echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"    
+  echo 'sudo ./tools/kernel_flash/l4t_initrd_flash.sh --external-device nvme0n1p1 -c tools/kernel_flash/flash_l4t_external.xml -p "-c bootloader/generic/cfg/flash_t234_qspi.xml --no-systemimg" --network usb0 echopilot-ai external'
+  echo ""
 elif [ "$BSP_BRANCH" -eq 35 ]; then     
-    echo "Copying files for L4T 35..."
-    # copy files
-    cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.
-    cp Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-scr-p3767-0000.dts $INSTALL_PATH/bootloader/t186ref/BCT/.
-    cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-0000-p3509-a02.dtb $INSTALL_PATH/kernel/dtb/.
-    $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/.    
-	
-    # Copy custom dtbo file to root filesystem
-    echo "Installing custom DTBO file..."
-	$SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
+  echo "Copying files for L4T 35..."
+  # disable board eeprom requirement
+  apply_patch $INSTALL_PATH/.. patches/0001-disable-board-eeprom-requirement-r35.patch
+  # add fix for disabled hdmi (corrected in 36.4+)
+  apply_patch $INSTALL_PATH/.. patches/0001-fix-boot-with-missing-hdmi-on-orin-with-3rd-party-ca-r35.patch
 
-    #create a backup of original if not already created
-	if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
-		echo "Creating a backup of extlinux.conf..."
-		$SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
-	else
-		echo "Backup already exists, skipping backup creation."
-	fi
+  # add fancontrol config
+  $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
 
-	# Replace the config file with ours with the OVERLAY set for custom imx477
-	$SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
-    echo "Success!!!"
-    echo ""
-    echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"
-    echo 'sudo ./tools/kernel_flash/l4t_initrd_flash.sh --external-device nvme0n1p1 -c tools/kernel_flash/flash_l4t_external.xml -p "-c bootloader/t186ref/cfg/flash_t234_qspi.xml" --showlogs --network usb0 p3509-a02+p3767-0000 internal'
-    echo ""
+  # Copy custom device tree overlay files to the BSP
+  echo "Installing custom DTBO files..."
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-echopilot-branding.dtbo $INSTALL_PATH/kernel/dtb/.
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-disable-display.dtbo $INSTALL_PATH/kernel/dtb/.
+  $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-enable-serial-r35.dtbo $INSTALL_PATH/kernel/dtb/.
+
+  # Copy custom conf to the BSP
+  $SUDO cp Linux_for_Tegra/echopilot-ai-r35.conf $INSTALL_PATH/echopilot-ai.conf
+
+  echo "Success!!!"
+  echo ""
+  echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"
+  echo 'sudo ./tools/kernel_flash/l4t_initrd_flash.sh --external-device nvme0n1p1 -c tools/kernel_flash/flash_l4t_external.xml -p "-c bootloader/t186ref/cfg/flash_t234_qspi.xml --no-systemimg" --network usb0 echopilot-ai external'
+  echo ""
 else
-    echo "Version ${BSP_BRANCH} of L4T detected is not supported. Please use L4T 35.x or 36.x"
+  echo "Version ${BSP_BRANCH} of L4T detected is not supported. Please use L4T 35.x or 36.x"
 fi

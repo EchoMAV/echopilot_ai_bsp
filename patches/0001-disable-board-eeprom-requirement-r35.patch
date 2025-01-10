@@ -1,0 +1,25 @@
+From f82480170a1112ba5fbb8c24861963cd70328028 Mon Sep 17 00:00:00 2001
+From: Garrett Mesmer <190508517+gmesm@users.noreply.github.com>
+Date: Wed, 8 Jan 2025 09:43:35 -0500
+Subject: [PATCH] disable board eeprom requirement
+
+---
+ .../bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts b/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts
+index 6b1f753..3436dbb 100644
+--- a/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts
++++ b/Linux_for_Tegra/bootloader/t186ref/BCT/tegra234-mb2-bct-misc-p3767-0000.dts
+@@ -10,7 +10,7 @@
+ 			cvm_eeprom_read_size = <0x100>;
+ 			cvb_eeprom_i2c_instance = <0x0>;
+ 			cvb_eeprom_i2c_slave_address = <0xae>;
+-			cvb_eeprom_read_size = <0x100>;
++			cvb_eeprom_read_size = <0x0>;
+ 		};
+ 	};
+ };
+-- 
+2.34.1
+
