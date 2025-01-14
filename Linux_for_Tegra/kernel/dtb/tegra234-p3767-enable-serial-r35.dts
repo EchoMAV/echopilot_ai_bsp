@@ -3,7 +3,7 @@
 
 / {
     overlay-name = "Enable Serial ttyTHS1 Custom Echopilot Overlay";
-    compatible = "nvidia,p3509-0000+p3767-0000";
+    compatible = "nvidia,p3509-0000+p3767-0000\0nvidia,p3509-0000+p3767-0001\0nvidia,p3509-0000+p3767-0003\0nvidia,p3509-0000+p3767-0004\0nvidia,p3509-0000+p3767-0005";
 
     fragment@1 {
         target-path = "/serial@3110000";
