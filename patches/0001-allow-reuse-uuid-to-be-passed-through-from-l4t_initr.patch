@@ -1,0 +1,55 @@
+From dd3c2033b663bae41f4841e93b2adecdbc24df35 Mon Sep 17 00:00:00 2001
+From: Garrett Mesmer <190508517+gmesm@users.noreply.github.com>
+Date: Wed, 8 Jan 2025 09:42:47 -0500
+Subject: [PATCH] allow --reuse-uuid to be passed through from
+ l4t_initrd_flash.sh to flash.sh when flashing external (NVMe) and internal
+ (qspi) in the same command
+
+---
+ Linux_for_Tegra/flash.sh                                     | 3 +++
+ .../tools/kernel_flash/l4t_create_images_for_kernel_flash.sh | 5 +++++
+ 2 files changed, 8 insertions(+)
+
+diff --git a/Linux_for_Tegra/flash.sh b/Linux_for_Tegra/flash.sh
+index dd1c8bc..d071abf 100755
+--- a/Linux_for_Tegra/flash.sh
++++ b/Linux_for_Tegra/flash.sh
+@@ -1128,7 +1128,10 @@ function rootuuid_chk_and_gen() {
+ 	if [ "${reuse_uuid}" -eq 0 ] && [ -f "${rootfsuuidfile}${root_id}" ] \
+ 		&& [ "${target_partname}" == "" ] && [ "${reuse_systemimg}" != "true" ] \
+ 		&& [ "${no_systemimg}" -eq 0 ]; then
++		echo "Removing existing UUID file"
+ 		rm "${rootfsuuidfile}${root_id}"
++	else
++		echo "Attempting to re-use existing UUID file"
+ 	fi
+ 
+ 	# read UUID which stored in the file ${rootfsuuidfile} if the file exist
+diff --git a/Linux_for_Tegra/tools/kernel_flash/l4t_create_images_for_kernel_flash.sh b/Linux_for_Tegra/tools/kernel_flash/l4t_create_images_for_kernel_flash.sh
+index 1c122ed..e5f3eac 100755
+--- a/Linux_for_Tegra/tools/kernel_flash/l4t_create_images_for_kernel_flash.sh
++++ b/Linux_for_Tegra/tools/kernel_flash/l4t_create_images_for_kernel_flash.sh
+@@ -156,6 +156,7 @@ function generate_flash_images()
+ 		fi
+ 
+ 		# generate all the images needed for flashing external device
++		echo "external device options when generating image: ${EXTOPTIONS}"
+ 		if ! generate_signed_images "${EXTOPTIONS}" "1" "${root}"; then
+ 			echo "Error: Failed to generate images for external device"
+ 			exit 204
+@@ -629,8 +630,12 @@ while getopts "${opstr}" OPTION; do
+ 	   ;;
+ 	esac;
+ done
++echo "OPTIONS: $OPTIONS"
+ if [ "${external_only}" = "1" ]; then
+ 	EXTOPTIONS="${OPTIONS}"
++# hack due to --reuse-uuid not being passed through
++elif [[ "${OPTIONS}" =~ "--reuse-uuid" ]]; then
++	EXTOPTIONS="--reuse-uuid "
+ fi
+ ENCRYPTED_SIGNED_DIR="${BOOTLOADER_DIR}/$(get_images_dir)"
+ FLASH_INDEX_FILE="${ENCRYPTED_SIGNED_DIR}/flash.idx"
+-- 
+2.34.1
+
