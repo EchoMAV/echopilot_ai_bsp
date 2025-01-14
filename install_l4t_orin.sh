@@ -69,6 +69,9 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
   # set systemd default target to multi-user instead of graphical
   $SUDO ln -sf /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
 
+  # disable "Predictable Network Interface Names" (jetson builtin ethernet will revert to eth0)
+  $SUDO ln -sf /dev/null $INSTALL_PATH/rootfs/etc/systemd/network/99-default.link
+
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
   $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-echopilot-branding.dtbo $INSTALL_PATH/kernel/dtb/.
@@ -110,6 +113,9 @@ elif [ "$BSP_BRANCH" -eq 35 ]; then
 
   # set systemd default target to multi-user instead of graphical
   $SUDO ln -sf /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
+
+  # disable "Predictable Network Interface Names" (jetson builtin ethernet will revert to eth0)
+  $SUDO ln -sf /dev/null $INSTALL_PATH/rootfs/etc/systemd/network/99-default.link
 
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
