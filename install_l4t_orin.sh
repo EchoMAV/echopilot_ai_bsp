@@ -66,6 +66,9 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
   # add fancontrol config
   $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
 
+  # set systemd default target to multi-user instead of graphical
+  $SUDO ln -s /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
+
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
   $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-echopilot-branding.dtbo $INSTALL_PATH/kernel/dtb/.
@@ -104,6 +107,9 @@ elif [ "$BSP_BRANCH" -eq 35 ]; then
 
   # add fancontrol config
   $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
+
+  # set systemd default target to multi-user instead of graphical
+  $SUDO ln -s /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
 
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
