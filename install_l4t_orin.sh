@@ -67,7 +67,7 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
   $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
 
   # set systemd default target to multi-user instead of graphical
-  $SUDO ln -s /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
+  $SUDO ln -sf /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
 
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
@@ -109,7 +109,7 @@ elif [ "$BSP_BRANCH" -eq 35 ]; then
   $SUDO cp Linux_for_Tegra/rootfs/etc/nvpower/nvfancontrol/nvfancontrol_p3767_0000.conf $INSTALL_PATH/rootfs/etc/nvpower/nvfancontrol/. 
 
   # set systemd default target to multi-user instead of graphical
-  $SUDO ln -s /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
+  $SUDO ln -sf /lib/systemd/system/multi-user.target $INSTALL_PATH/rootfs/etc/systemd/system/default.target
 
   # Copy custom device tree overlay files to the BSP
   echo "Installing custom DTBO files..."
