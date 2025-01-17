@@ -50,11 +50,12 @@ if [ ! -f "$BSP_PATH" ]; then
 else
   BSP_BRANCH=$(grep "^BSP_BRANCH=" "$BSP_PATH" | awk -F= '{print $2}')
   BSP_MAJOR=$(grep "^BSP_MAJOR=" "$BSP_PATH" | awk -F= '{print $2}')
-  echo "Found L4T Version: $BSP_BRANCH.$BSP_MAJOR"
+  BSP_MINOR=$(grep "^BSP_MINOR=" "$BSP_PATH" | awk -F= '{print $2}')
+  echo "Found L4T Version: $BSP_BRANCH.$BSP_MAJOR.$BSP_MINOR"
 fi
 
 if [ "$BSP_BRANCH" -eq 36 ]; then
-  echo "Copying files for L4T $BSP_BRANCH.$BSP_MAJOR..."
+  echo "Copying files for L4T $BSP_BRANCH.$BSP_MAJOR.$BSP_MINOR..."
   echo "Applying BSP patches..."
   # disable board eeprom requirement
   apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-disable-board-eeprom-requirement.patch
@@ -81,7 +82,12 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
   $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-enable-serial.dtbo $INSTALL_PATH/kernel/dtb/.
 
   # Copy custom conf to the BSP
-  $SUDO cp Linux_for_Tegra/echopilot-ai.conf $INSTALL_PATH/.
+  # Enable "Super" variants on Jetson Orin Nano when available
+  if [ "$BSP_MAJOR" -lt 4 ] || ([ "$BSP_MAJOR" -eq 4 ] && [ "$BSP_MINOR" -lt 3 ]); then
+    $SUDO cp Linux_for_Tegra/echopilot-ai-r3630-.conf $INSTALL_PATH/echopilot-ai.conf
+  else
+    $SUDO cp Linux_for_Tegra/echopilot-ai.conf $INSTALL_PATH/.
+  fi
 
   # Disable force installation of custom IMX477 DTBO for now
   # echo "Installing custom DTBO file..."
