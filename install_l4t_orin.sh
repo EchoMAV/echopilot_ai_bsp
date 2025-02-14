@@ -89,21 +89,6 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
     $SUDO cp Linux_for_Tegra/echopilot-ai.conf $INSTALL_PATH/.
   fi
 
-  # Disable force installation of custom IMX477 DTBO for now
-  # echo "Installing custom DTBO file..."
-  # $SUDO cp Linux_for_Tegra/kernel/dtb/tegra234-p3767-camera-p3768-imx477-custom-echopilot-ai-overlay.dtbo $INSTALL_PATH/rootfs/boot/.
-
-  # #create a backup of original if not already created
-  # if [ ! -f "$INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak" ]; then
-  #   echo "Creating a backup of extlinux.conf..."
-  #   $SUDO cp $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/extlinux.conf.bak
-  # else
-  #   echo "Backup already exists, skipping backup creation."
-  # fi
-
-  # # Replace the config file with ours with the OVERLAY set for custom imx477
-  # $SUDO cp Linux_for_Tegra/rootfs/boot/extlinux/extlinux.conf $INSTALL_PATH/rootfs/boot/extlinux/.
-
   echo "Success!!!"
   echo ""
   echo "You may now flash the Orin from the Linux_for_Tegra directory using the command:"    
