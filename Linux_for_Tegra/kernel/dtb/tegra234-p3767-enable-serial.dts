@@ -2,13 +2,21 @@
 /plugin/;
 
 / {
-    overlay-name = "Enable Serial ttyS0 Custom Echopilot Overlay";
+    overlay-name = "Enable Serial ttyTHS3 Custom Echopilot Overlay";
 	compatible = "nvidia,p3768-0000+p3767-0000\0nvidia,p3768-0000+p3767-0001\0nvidia,p3768-0000+p3767-0003\0nvidia,p3768-0000+p3767-0004\0nvidia,p3768-0000+p3767-0005";
 
     fragment@0 {
         target-path = "/bus@0/serial@3110000";
         __overlay__ {
+            compatible = "nvidia,tegra194-hsuart";
             status = "okay";
+            reset-names = "serial";
+        };
+    };
+    fragment@1 {
+        target-path = "/aliases";
+        __overlay__ {
+            serial3 = "/bus@0/serial@3110000";
         };
     };
 };
