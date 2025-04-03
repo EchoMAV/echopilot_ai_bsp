@@ -19,4 +19,10 @@
             serial3 = "/bus@0/serial@3110000";
         };
     };
+    fragment@2 {
+        target-path = "/__symbols__";
+        __overlay__ {
+            uartb = "/bus@0/serial@3110000";
+        };
+    };
 };
