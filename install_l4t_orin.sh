@@ -12,7 +12,7 @@ apply_patch() {
     git -C "$1" apply --reverse "$2" &>/dev/null
   fi
   # apply patch
-  git -C "$1" apply --verbose "$2" &>/dev/null
+  git -C "$1" apply --verbose "$2"
 }
 
 
@@ -97,9 +97,9 @@ if [ "$BSP_BRANCH" -eq 36 ]; then
 elif [ "$BSP_BRANCH" -eq 35 ]; then     
   echo "Copying files for L4T 35..."
   # disable board eeprom requirement
-  apply_patch $INSTALL_PATH/.. patches/0001-disable-board-eeprom-requirement-r35.patch
+  apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-disable-board-eeprom-requirement-r35.patch
   # add fix for disabled hdmi (corrected in 36.4+)
-  apply_patch $INSTALL_PATH/.. patches/0001-fix-boot-with-missing-hdmi-on-orin-with-3rd-party-ca-r35.patch
+  apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-fix-boot-with-missing-hdmi-on-orin-with-3rd-party-ca-r35.patch
   # allow --reuse-uuid to be passed through from l4t_initrd_flash.sh to flash.sh when flashing external (NVMe) and internal (qspi) in the same command
   apply_patch $INSTALL_PATH/.. "$SCRIPT_DIR"/patches/0001-allow-reuse-uuid-to-be-passed-through-from-l4t_initr-r35.patch
 
